@@ -60,6 +60,7 @@ Interp::Interp(const string& text)
 void Interp::iterate(const string& passName)
 {
 	string passage;
+	vector<string> links;		// list of links to display after the passage text
 	vector<pair<section_t, string>> tokens;
 	if (passName == STARTING_PASSAGE)
 		passage = s.getFirstPassage();
@@ -74,8 +75,8 @@ void Interp::iterate(const string& passName)
 		case LINK:
 		{
 			Link L(tokens[i].second);
-
-
+			cout << L.getDisplayText();					// output displayText in LINK
+			linkList.push_back(L.getPassageName());		// add linked passage to list of options
 		}
 		//cout << "  Link:  " << endl << s.second << endl;
 		break;
@@ -146,6 +147,10 @@ void Interp::iterate(const string& passName)
 			cout << "  Unknown token:  " << tokens[i].second << endl;
 		}
 	}
+
+	// display list of links for user to choose from
+	for (int i = 0; i < links.length(); i++)
+		cout << linkText << endl;
 }
 
 GoTo::GoTo(const string& t)
