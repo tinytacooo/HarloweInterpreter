@@ -180,6 +180,8 @@ private:
 public:
 	Link(const string& t);
 	const string& getLink() { return linkText; }
+	const string& getPassageName() { return passageName; }
+	const string& getDisplayText() { return displayText; }
 };
 
 #endif
