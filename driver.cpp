@@ -6,6 +6,7 @@ using namespace std;
 
 int main() {
 	string line, s;
+	string next;
 
 	getline(cin, line);
 	while (cin && line != "</html>") {
@@ -14,7 +15,12 @@ int main() {
 	}
 
 	Interp I(s);
-	I.iterate("start");
+	next = I.iterate("start");
+
+	while (next != END_STORY) {
+		next = I.iterate(next);
+	}
+
 	system("pause");
 
 	return 0;

@@ -57,8 +57,9 @@ Interp::Interp(const string& text)
 	s.parseStory();
 }
 
-void Interp::iterate(const string& passName)
+string Interp::iterate(const string& passName)
 {
+	int nextPassage;
 	string passage;
 	string passageText; 						// passage text to display for user
 	vector<pair<string, string>> linkList;		// list of links to display after the passage text <displayText, passageName>
@@ -153,6 +154,14 @@ void Interp::iterate(const string& passName)
 	cout << passageText << endl;
 	for (int i = 0; i < linkList.size(); i++)
 		cout << i+1 << ". " << linkList[i].first << endl;
+
+	if (linkList.size() >= 1)
+	{
+		cin >> nextPassage;
+		return linkList[--nextPassage].second;
+	}
+	else
+		return END_STORY;
 }
 
 GoTo::GoTo(const string& t)

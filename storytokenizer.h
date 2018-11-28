@@ -35,6 +35,9 @@ const string GOTO_NAME_END = "&quot;";
 //Starting Passage
 const string STARTING_PASSAGE = "First %% Passage %%";
 
+//End story condition
+const string END_STORY = "---YOU_SHALL_NOT_PASS---";
+
 class PassageToken
 {
 private:
@@ -107,7 +110,7 @@ private:
 	Story s;
 public:
 	Interp(const string& text);
-	void iterate(const string& passName);
+	string iterate(const string& passName);
 };
 
 class GoTo
@@ -180,7 +183,7 @@ private:
 public:
 	Link(const string& t);
 	const string& getLink() { return linkText; }
-	const string& getPassageName() { return passageName; }
+	const string& getPassageName() { return linkText; }
 	const string& getDisplayText() { return displayText; }
 };
 
