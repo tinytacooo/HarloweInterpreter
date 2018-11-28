@@ -369,7 +369,7 @@ SectionToken PassageTokenizer::nextSection()
 			lastsect = BLOCK;
 		else
 			lastsect = TEXT; //Treat a bad block as text?
-		cout << pass.substr(start, end - start) << endl;
+		// cout << pass.substr(start, end - start) << endl;
 		ret = SectionToken(pass.substr(start, end - start), BLOCK);
 		pos = end;
 		return ret;
