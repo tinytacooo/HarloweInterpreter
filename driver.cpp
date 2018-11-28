@@ -17,9 +17,8 @@ int main() {
 	Interp I(s);
 	next = I.iterate("start");
 
-	while (next != END_STORY) {
+	while (next != END_STORY)
 		next = I.iterate(next);
-	}
 
 	system("pause");
 

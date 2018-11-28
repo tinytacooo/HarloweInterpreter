@@ -36,7 +36,7 @@ const string GOTO_NAME_END = "&quot;";
 const string STARTING_PASSAGE = "First %% Passage %%";
 
 //End story condition
-const string END_STORY = "---YOU_SHALL_NOT_PASS---";
+const string END_STORY = "%% YOU_SHALL_NOT_PASS %%";
 
 class PassageToken
 {

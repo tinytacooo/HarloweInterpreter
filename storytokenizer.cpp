@@ -70,6 +70,8 @@ string Interp::iterate(const string& passName)
 		passage = passName;
 	tokens = s.getTokens(passage);
 	cout << "Passage Name: " << passage << endl;
+
+
 	for (int i = 0; i < tokens.size(); i++)
 	{
 		switch (tokens[i].first)
@@ -100,13 +102,15 @@ string Interp::iterate(const string& passName)
 		{
 			bool tempBool;
 			If compare(tokens[i].second);
-			tempBool = compare.compareVariables(s.getVariableVal(compare.getVar()));
+			tempBool = (s.getVariableVal(compare.getVar()) == true) ? true : false;
+
 			if (tempBool)
 			{
 				Block b(tokens[i + 1].second);
 				cout << b.getText() << endl;
 				i++;
 			}
+			else { i ++; }		// if IF is not true, do nothing and skip over its block.
 			/*
 			if (compare.getResult() == false && tokens[i + 2].first == ELSEIF)
 			{
@@ -146,7 +150,8 @@ string Interp::iterate(const string& passName)
 		}
 		break;
 		default:
-			cout << "  Unknown token:  " << tokens[i].second << endl;
+			cout << "";
+			// cout << "  Unknown token:  " << tokens[i].second << endl;
 		}
 	}
 
@@ -255,13 +260,6 @@ If::If(const string& t)
 
 }
 
-bool If::compareVariables(const bool& value)
-{
-	if (expectedValue == value)
-		result = true;
-	return result;
-}
-
 ElseIf::ElseIf(const string& t)
 {
 	int startVar, endVar, varLen;
@@ -318,92 +316,102 @@ bool PassageTokenizer::hasNextSection() const
 	return pos < pass.size();
 }
 
-SectionToken PassageTokenizer::nextSection() {
-	unsigned int start, end;
-	SectionToken ret;
+SectionToken PassageTokenizer::nextSection()
+{
+  unsigned int start, end;
+  SectionToken ret;
 
-	if (pos >= pass.size())
-	{
-		lastsect = TEXT;
-		return ret;
-	}
+  // when end of passage has been reached
+  // pos is where we left off; updated at the end of this function
+  if (pos >= pass.size())
+  {
+    lastsect = TEXT;
+    return ret;
+  }
+  
+  //Handle blocks separately
+  start = pass.find(BLOCK_START, pos);
+  if ((lastsect == IF || lastsect == ELSEIF || lastsect == ELSE) && start != string::npos)
+  {
+    end = start+1;
+    unsigned int level = 1;
 
-	//Handle blocks separately
-	start = pass.find(BLOCK_START, pos);
-	if ((lastsect == IF || lastsect == ELSEIF || lastsect == ELSE) && start != string::npos)
-	{
-		end = start + 1;
-		unsigned int level = 1;
-		while (level > 0 && end < pass.size())
-		{
-			if (pass.substr(end, BLOCK_START.size()) == BLOCK_START)
-				level++;
-			else if (pass.substr(end, BLOCK_START.size()) == BLOCK_END)
-				level--;
-			end++;
-		}
-		if (level == 0)
-			lastsect = BLOCK;
-		else
-			lastsect = TEXT; //Treat a bad block as text?
-		ret = SectionToken(pass.substr(start, end - start), BLOCK);
-		pos = end;
-		return ret;
-	}
-	else
-	{
-		unsigned int nextset = pass.find(SET_START, pos);
-		unsigned int nextgoto = pass.find(GOTO_START, pos);
-		unsigned int nextlink = pass.find(LINK_START, pos);
-		unsigned int nextif = pass.find(IF_START, pos);
-		unsigned int nextelseif = pass.find(ELSEIF_START, pos);
-		unsigned int nextelse = pass.find(ELSE_START, pos);
-		unsigned int nexttok = nextset;
+    // iterate through the block and find all the text in it, even links denoted with square brackets
+    while (level > 0 && end < pass.size())
+    {
+      if (pass.substr(end, BLOCK_START.size()) == BLOCK_START)
+        level++;
+      else if (pass.substr(end, BLOCK_START.size()) == BLOCK_END)
+        level--;
+      end++;
+    }
 
-		if (nextgoto < nexttok)
-			nexttok = nextgoto;
-		if (nextgoto < nexttok)
-			nexttok = nextgoto;
-		if (nextlink < nexttok)
-			nexttok = nextlink;
-		if (nextif < nexttok)
-			nexttok = nextif;
-		if (nextelseif < nexttok)
-			nexttok = nextelseif;
-		if (nextelse < nexttok)
-			nexttok = nextelse;
+    // if a closing bracket was found for the opening bracket, the text was a block.
+    if (level == 0)
+      lastsect = BLOCK; 
+    else
+      lastsect = TEXT; //Treat a bad block as text?
+  cout << pass.substr(start, end - start) << endl;
+    ret = SectionToken(pass.substr(start, end - start), BLOCK);
+    pos = end;
+    return ret;
+  }
+  else
+  {
+    unsigned int nextset = pass.find(SET_START, pos);
+    unsigned int nextgoto = pass.find(GOTO_START, pos);
+    unsigned int nextlink = pass.find(LINK_START, pos);
+    unsigned int nextif = pass.find(IF_START, pos);
+    unsigned int nextelseif = pass.find(ELSEIF_START, pos);
+    unsigned int nextelse = pass.find(ELSE_START, pos);
 
-		end = string::npos;
-		lastsect = TEXT;
-		if (nexttok > pos)
-			end = nexttok;
-		else if (nexttok == nextlink)
-		{
-			end = pass.find(LINK_END, nextlink) + LINK_END.size();
-			lastsect = LINK;
-		}
-		else if (nexttok != string::npos)
-		{
-			end = pass.find(COMMAND_END, pos) + 1;
-			if (nexttok == nextgoto)
-				lastsect = GOTO;
-			else if (nexttok == nextset)
-				lastsect = SET;
-			else if (nexttok == nextif)
-				lastsect = IF;
-			else if (nexttok == nextelseif)
-				lastsect = ELSEIF;
-			else if (nexttok == nextelse)
-				lastsect = ELSE;
-			else
-				lastsect = TEXT;
-		}
-		if (end != string::npos)
-			ret = SectionToken(pass.substr(pos, end - pos), lastsect);
-		else
-			ret = SectionToken(pass.substr(pos), lastsect);
-		pos = end;
-		return ret;
-	}
+    unsigned int nexttok = nextset;
+    if (nextgoto < nexttok)
+      nexttok = nextgoto;
+    if (nextgoto < nexttok)
+      nexttok = nextgoto;
+    if (nextlink < nexttok)
+      nexttok = nextlink;
+    if (nextif < nexttok)
+      nexttok = nextif;
+    if (nextelseif < nexttok)
+      nexttok = nextelseif;
+    if (nextelse < nexttok)
+      nexttok = nextelse;
+
+    end = string::npos;
+    lastsect = TEXT;
+    if (nexttok > pos)
+      end = nexttok;
+    else if (nexttok == nextlink)
+    {
+      end = pass.find(LINK_END, nextlink) + LINK_END.size();
+      lastsect = LINK;
+    }
+    else if (nexttok != string::npos)
+    {
+      end = pass.find(COMMAND_END, pos) + 1;
+      if (nexttok == nextgoto)
+        lastsect = GOTO;
+      else if (nexttok == nextset)
+        lastsect = SET;
+      else if (nexttok == nextif)
+        lastsect = IF;
+      else if (nexttok == nextelseif)
+        lastsect = ELSEIF;
+      else if (nexttok == nextelse)
+        lastsect = ELSE;
+      else
+        lastsect = TEXT;
+    }
+
+    if (end != string::npos)
+      ret = SectionToken(pass.substr(pos, end - pos), lastsect);
+    else
+      ret = SectionToken(pass.substr(pos), lastsect);
+    pos = end;
+    return ret;
+  }
 }
 
+   
