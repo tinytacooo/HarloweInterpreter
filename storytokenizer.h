@@ -118,7 +118,7 @@ private:
 	string name;
 public:
 	GoTo(const string& t);
-	const string& getNextP() { return name; }
+	const string& getName() { return name; }
 };
 
 class Text
@@ -172,6 +172,7 @@ private:
 public:
 	Block(const string& t);
 	const string& getText() { return text; }
+	void parseBlock();
 };
 
 class Link

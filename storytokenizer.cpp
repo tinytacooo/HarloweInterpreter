@@ -110,8 +110,10 @@ string Interp::iterate(const string& passName)
 		case GOTO:
 		{
 			GoTo go(tokens[i].second);
-			this->iterate(go.getNextP());
-			i = tokens.size();
+			// this->iterate(go.getNextP());		// KJ - EDIT
+			// i = tokens.size();					// KJ - EDIT
+			passageText += go.getName();							// basically handle GOTO like a LINK... don't know if that's right, though.
+			linkList.emplace_back(go.getName(), go.getName());
 		}
 		break;
 		case IF:
@@ -303,6 +305,7 @@ Block::Block(const string& t)
 {
 	text = t.substr(1, t.length() - 2);
 }
+
 
 
 bool StoryTokenizer::hasNextPassage() const
