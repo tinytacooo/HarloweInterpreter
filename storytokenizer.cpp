@@ -60,8 +60,8 @@ Interp::Interp(const string& text)
 void Interp::iterate(const string& passName)
 {
 	string passage;
-	string passageText; 			// passage text to display for user
-	vector<string> linkList;		// list of links to display after the passage text
+	string passageText; 						// passage text to display for user
+	vector<pair<string, string>> linkList;		// list of links to display after the passage text <displayText, passageName>
 	vector<pair<section_t, string>> tokens;
 	if (passName == STARTING_PASSAGE)
 		passage = s.getFirstPassage();
@@ -76,8 +76,8 @@ void Interp::iterate(const string& passName)
 		case LINK:
 		{
 			Link L(tokens[i].second);
-			passageText += L.getDisplayText();					// output displayText in LINK
-			linkList.push_back(L.getPassageName());		// add linked passage to list of options
+			passageText += L.getDisplayText();									// put displayText from LINK in passageText
+			linkList.emplace_back(L.getDisplayText(), L.getPassageName());		// add linked passage to list of options
 		}
 		//cout << "  Link:  " << endl << s.second << endl;
 		break;
@@ -152,7 +152,7 @@ void Interp::iterate(const string& passName)
 	// display passage and list of links for user to choose from
 	cout << passageText << endl;
 	for (int i = 0; i < linkList.size(); i++)
-		cout << i+1 << ". " << linkList.at(i) << endl;
+		cout << i+1 << ". " << linkList[i].first << endl;
 }
 
 GoTo::GoTo(const string& t)
