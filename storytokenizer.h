@@ -162,9 +162,7 @@ private:
 public:
 	ElseIf(const string& t);
 	const string& getVar() { return var; }
-	bool compVar(const bool& value);
-	bool getResult() { return result; }
-
+	//bool getResult() { return result; }	//EDIT
 };
 
 class Block

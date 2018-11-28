@@ -74,6 +74,7 @@ Interp::Interp(const string& text)
 
 string Interp::iterate(const string& passName)
 {
+	bool tryNext;
 	int nextPassage;
 	string passage;
 	string passageText; 						// passage text to display for user
@@ -116,6 +117,7 @@ string Interp::iterate(const string& passName)
 		case IF:
 		{
 			bool tempBool;
+			tryNext = false;
 			If compare(tokens[i].second);
 			tempBool = (s.getVariableVal(compare.getVar()) == true) ? true : false;
 
@@ -125,16 +127,47 @@ string Interp::iterate(const string& passName)
 				cout << b.getText() << endl;
 				i++;
 			}
-			else { i++; }		// if IF is not true, do nothing and skip over its block.
+			else
+			{
+				tryNext = true;		// if IF condition isn't met, allow next else/else-if block to be evaluated
+				i++;				// if IF is not true, do nothing and skip over its block.
+			}
 
 		}
 		break;
 		case ELSEIF:
 		{
+			if (!tryNext)
+				break;
+			else
+			{
+				bool tempBool;
+				ElseIf compare(tokens[i].second);
+				tempBool = (s.getVariableVal(compare.getVar()) == true) ? true : false;
 
+				if (tempBool)
+				{
+					Block b(tokens[i + 1].second);
+					cout << b.getText() << endl;
+					tryNext = false;	// don't evaluate next block (if any) in the sequence
+					i++;
+				}
+				else
+					i++;
+			}
 		}
 		break;
 		case ELSE:
+		{
+			if (!tryNext)
+				break;
+			else
+			{
+				Block b(tokens[i + 1].second);
+				cout << b.getText() << endl;
+
+			}
+		}
 			//cout << "  Else:  " << endl << s.second << endl;
 			break;
 		case TEXT:
@@ -260,19 +293,10 @@ ElseIf::ElseIf(const string& t)
 	int startBool, endBool, boolLen;
 	string temp;
 
-	startVar = t.find(ELSEIF_START) + ELSEIF_START.size();
+	startVar = t.find(ELSEIF_START) + ELSEIF_START.size() + 2;
 	endVar = t.find(" ", startVar + ELSEIF_START.size() - 1);
 	varLen = endVar - startVar;
 	var = t.substr(startVar, varLen);
-
-	cout << var << endl;
-}
-
-bool ElseIf::compVar(const bool& value)
-{
-	if (expectedValue == value)
-		result = true;
-	return result;
 }
 
 Block::Block(const string& t)
