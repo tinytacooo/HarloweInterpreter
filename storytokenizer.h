@@ -109,6 +109,7 @@ private:
 	Story s;
 public:
 	Interp(const string& text);
+	Interp(const string& text, bool isBlock);
 	string iterate(const string& passName);
 };
 
@@ -162,17 +163,17 @@ private:
 public:
 	ElseIf(const string& t);
 	const string& getVar() { return var; }
-	//bool getResult() { return result; }	//EDIT
+	bool getExpectedValue() { return expectedValue; }	//EDIT
 };
 
 class Block
 {
 private:
 	string text;
+	vector <pair<section_t, string>> blockSections;
 public:
 	Block(const string& t);
 	const string& getText() { return text; }
-	void parseBlock();
 };
 
 class Link

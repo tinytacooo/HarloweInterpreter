@@ -121,7 +121,7 @@ string Interp::iterate(const string& passName)
 			bool tempBool;
 			tryNext = false;
 			If compare(tokens[i].second);
-			tempBool = (s.getVariableVal(compare.getVar()) == true) ? true : false;
+			tempBool = (s.getVariableVal(compare.getVar()) == compare.getExpectedValue()) ? true : false;
 
 			if (tempBool)
 			{
@@ -145,7 +145,7 @@ string Interp::iterate(const string& passName)
 			{
 				bool tempBool;
 				ElseIf compare(tokens[i].second);
-				tempBool = (s.getVariableVal(compare.getVar()) == true) ? true : false;
+				tempBool = (s.getVariableVal(compare.getVar()) == compare.getExpectedValue()) ? true : false;
 
 				if (tempBool)
 				{
@@ -189,6 +189,7 @@ string Interp::iterate(const string& passName)
 	for (int i = 0; i < linkList.size(); i++)
 		cout << i + 1 << ". " << linkList[i].first << endl;
 
+	// if there's still links left to choose from, advance the passage; otherwise, end the program.
 	if (linkList.size() >= 1)
 	{
 		cin >> nextPassage;
@@ -299,14 +300,17 @@ ElseIf::ElseIf(const string& t)
 	endVar = t.find(" ", startVar + ELSEIF_START.size() - 1);
 	varLen = endVar - startVar;
 	var = t.substr(startVar, varLen);
+
+	startBool = t.find("is ", endVar) + 3;
+	endBool = t.find(")", startBool);
+	boolLen = endBool - startBool;
+	temp = t.substr(startBool, boolLen);
+
+	if (temp == "true")
+		expectedValue = true;
+	else
+		expectedValue = false;
 }
-
-Block::Block(const string& t)
-{
-	text = t.substr(1, t.length() - 2);
-}
-
-
 
 bool StoryTokenizer::hasNextPassage() const
 {
