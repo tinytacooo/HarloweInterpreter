@@ -146,20 +146,19 @@ class If
 {
 private:
 	string var;
-	bool expectedValue, result;
+	bool expectedValue;
 public:
 	If(const string& t);
 	const string& getVar() { return var; }
 	bool compareVariables(const bool& value);
 	bool getExpectedValue() { return expectedValue; }
-	bool getResult() { return result; }
 };
 
 class ElseIf
 {
 private:
 	string var;
-	bool expectedValue, result;
+	bool expectedValue;
 public:
 	ElseIf(const string& t);
 	const string& getVar() { return var; }

@@ -189,7 +189,6 @@ string Interp::iterate(const string& passName)
 	for (int i = 0; i < linkList.size(); i++)
 		cout << i + 1 << ". " << linkList[i].first << endl;
 
-	// if there's still links left to choose from, advance the passage; otherwise, end the program.
 	if (linkList.size() >= 1)
 	{
 		cin >> nextPassage;
@@ -311,6 +310,13 @@ ElseIf::ElseIf(const string& t)
 	else
 		expectedValue = false;
 }
+
+Block::Block(const string& t)
+{
+	text = t.substr(1, t.length() - 2);
+}
+
+
 
 bool StoryTokenizer::hasNextPassage() const
 {
@@ -438,4 +444,3 @@ SectionToken PassageTokenizer::nextSection()
 		return ret;
 	}
 }
-
