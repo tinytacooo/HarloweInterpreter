@@ -60,9 +60,9 @@ void Story::setVar(string str, bool p)
 			isPresent = true;
 	}
 	// create/edit variable as needed
-	if (isPresent)
+	if (isPresent) 
 		variableVec[str] = p;
-	else
+	else 
 		variableVec.emplace(str, p);
 }
 
@@ -104,14 +104,14 @@ string Interp::iterate(const string& passName)
 		{
 			Set var(tokens[i].second);
 			s.setVar(var.getVar(), var.getVal());
-																										//this->iterate("deadline");
+			//this->iterate("deadline");
 		}
 		break;
 		case GOTO:
 		{
 			GoTo go(tokens[i].second);
-			// this->iterate(go.getNextP());		// KJ - EDIT
-			// i = tokens.size();					// KJ - EDIT
+			//this->iterate(go.getName());		// KJ - EDIT
+			//i = tokens.size();					// KJ - EDIT
 			passageText += go.getName();							// basically handle GOTO like a LINK... don't know if that's right, though.
 			linkList.emplace_back(go.getName(), go.getName());
 		}
@@ -139,7 +139,7 @@ string Interp::iterate(const string& passName)
 		break;
 		case ELSEIF:
 		{
-			if (!tryNext)
+			if (!tryNext)		// if tryNext is FALSE (meaning a previous statement was executed), skip over else-if and the following block
 				break;
 			else
 			{
@@ -170,8 +170,8 @@ string Interp::iterate(const string& passName)
 
 			}
 		}
-			//cout << "  Else:  " << endl << s.second << endl;
-			break;
+		//cout << "  Else:  " << endl << s.second << endl;
+		break;
 		case TEXT:
 		{
 			Text t(tokens[i].second);
@@ -230,7 +230,6 @@ Set::Set(const string& t)
 		val = true;
 	else
 		val = false;
-
 }
 
 Link::Link(const string& t)
@@ -296,7 +295,7 @@ ElseIf::ElseIf(const string& t)
 	string temp;
 
 	startVar = t.find(ELSEIF_START) + ELSEIF_START.size() + 2;
-	endVar = t.find(" ", startVar + ELSEIF_START.size() - 1);
+	endVar = t.find(" ", startVar);
 	varLen = endVar - startVar;
 	var = t.substr(startVar, varLen);
 
@@ -382,7 +381,7 @@ SectionToken PassageTokenizer::nextSection()
 			lastsect = BLOCK;
 		else
 			lastsect = TEXT; //Treat a bad block as text?
-		// cout << pass.substr(start, end - start) << endl;
+							 // cout << pass.substr(start, end - start) << endl;
 		ret = SectionToken(pass.substr(start, end - start), BLOCK);
 		pos = end;
 		return ret;
