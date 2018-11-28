@@ -98,9 +98,8 @@ public:
 	void parseStory();
 	string getFirstPassage() { return startPassage; }
 	vector<pair<section_t, string>> getTokens(const string& p);
-	void setVar(string str, bool p) { variableVec.emplace(str, p); }
+	void setVar(string str, bool p);
 	bool getVariableVal(const string& str);
-
 };
 
 class Interp
