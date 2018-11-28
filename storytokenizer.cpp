@@ -60,6 +60,7 @@ Interp::Interp(const string& text)
 void Interp::iterate(const string& passName)
 {
 	string passage;
+	string passageText; 			// passage text to display for user
 	vector<string> linkList;		// list of links to display after the passage text
 	vector<pair<section_t, string>> tokens;
 	if (passName == STARTING_PASSAGE)
@@ -75,7 +76,7 @@ void Interp::iterate(const string& passName)
 		case LINK:
 		{
 			Link L(tokens[i].second);
-			cout << L.getDisplayText();					// output displayText in LINK
+			passageText += L.getDisplayText();					// output displayText in LINK
 			linkList.push_back(L.getPassageName());		// add linked passage to list of options
 		}
 		//cout << "  Link:  " << endl << s.second << endl;
@@ -140,7 +141,7 @@ void Interp::iterate(const string& passName)
 		case TEXT:
 		{
 			Text t(tokens[i].second);
-			cout << t.getText() << endl;
+			passageText += t.getText();
 		}
 		break;
 		default:
@@ -148,7 +149,8 @@ void Interp::iterate(const string& passName)
 		}
 	}
 
-	// display list of links for user to choose from
+	// display passage and list of links for user to choose from
+	cout << passageText << endl;
 	for (int i = 0; i < linkList.size(); i++)
 		cout << i+1 << ". " << linkList.at(i) << endl;
 }
@@ -198,16 +200,25 @@ Link::Link(const string& t)
 	linkLen = endLink - startLink;
 	linkText = t.substr(startLink, linkLen);
 
-	if (!t.find(LINK_SEPARATOR))
+	if (t.find(LINK_SEPARATOR) == string::npos)
 	{
 		displayText = linkText;
 		passageName = linkText;
 	}
 	else
 	{
-		int startName, endName, nameLen;
 		int startText, endText, textLen;
-
+		int startName, endName, nameLen;
+		// get displayText
+		startText = t.find(LINK_START) + LINK_START.size();
+		endText = t.find(LINK_SEPARATOR, startText);
+		textLen = endText - startText;
+		displayText = t.substr(startText, textLen);
+		// get passageName
+		startName = endText + LINK_SEPARATOR.size();
+		endName = t.find(LINK_END, startName);
+		nameLen = endName - startName;
+		passageName = t.substr(startName, nameLen);
 	}
 
 }
