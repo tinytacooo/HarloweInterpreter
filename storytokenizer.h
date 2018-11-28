@@ -151,6 +151,7 @@ public:
 	If(const string& t);
 	const string& getVar() { return var; }
 	bool compareVariables(const bool& value);
+	bool getExpectedValue() { return expectedValue; }
 	bool getResult() { return result; }
 };
 
@@ -183,7 +184,7 @@ private:
 public:
 	Link(const string& t);
 	const string& getLink() { return linkText; }
-	const string& getPassageName() { return linkText; }
+	const string& getPassageName() { return passageName; }
 	const string& getDisplayText() { return displayText; }
 };
 
