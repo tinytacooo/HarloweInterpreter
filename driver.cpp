@@ -1,26 +1,34 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <fstream>
 #include "storytokenizer.h"
 using namespace std;
 
 int main() {
 	string line, s;
 	string next;
+	ifstream file;
 
-	getline(cin, line);
-	while (cin && line != "</html>") {
-		s += line + '\n';
-		getline(cin, line);
+	file.open("test-example.html");
+	if (file.is_open())
+	{
+	getline(file, line);
+	//cout << line << endl;
+	while (cin && line != "</html>")
+	{
+	s += line + '\n';
+	getline(file, line);
+	//cout << line << endl;
 	}
-
+	}
 	Interp I(s);
-	next = I.iterate("start");
+	next = I.iterate(I.getFirstPass());
 
 	while (next != END_STORY)
-		next = I.iterate(next);
+	next = I.iterate(next);
 
-	system("pause");
+	file.close();
 
 	return 0;
 }
