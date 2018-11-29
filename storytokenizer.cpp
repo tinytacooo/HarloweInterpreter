@@ -124,6 +124,7 @@ string Interp::iterate(const string& passName)
 
 			if (tempBool)
 			{
+				/*** BLOCK HANDLING ***/
 				Block b(tokens[i + 1].second);
 				b.setStoryVars(s.getStoryVars());
 				b.iterate();
@@ -136,6 +137,7 @@ string Interp::iterate(const string& passName)
 					s.setVar(it.first, it.second);
 				// update passage text display
 				passageText += b.getText();
+				/*** END BLOCK HANDLING ***/
 
 				i++;
 			}
@@ -159,11 +161,21 @@ string Interp::iterate(const string& passName)
 
 				if (tempBool)
 				{
+					/*** BLOCK HANDLING ***/
 					Block b(tokens[i + 1].second);
 					b.setStoryVars(s.getStoryVars());
 					b.iterate();
+
+					// update passage linkList
+					for (auto it : b.getBlockLinks())
+						linkList.emplace_back(it.first, it.second);
+					// update story variables
+					for (auto it : b.getBlockVars())
+						s.setVar(it.first, it.second);
+					// update passage text display
 					passageText += b.getText();
-					//cout << b.getText() << endl;
+					/*** END BLOCK HANDLING ***/
+
 					tryNext = false;	// don't evaluate next block (if any) in the sequence
 					i++;
 				}
