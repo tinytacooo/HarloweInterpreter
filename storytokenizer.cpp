@@ -136,7 +136,7 @@ string Interp::iterate(const string& passName)
 				for (auto it : b.getBlockVars())
 					s.setVar(it.first, it.second);
 				// update passage text display
-				passageText += b.getText();
+				passageText += b.getBlockText();
 				/*** END BLOCK HANDLING ***/
 
 				i++;
@@ -173,7 +173,7 @@ string Interp::iterate(const string& passName)
 					for (auto it : b.getBlockVars())
 						s.setVar(it.first, it.second);
 					// update passage text display
-					passageText += b.getText();
+					passageText += b.getBlockText();
 					/*** END BLOCK HANDLING ***/
 
 					tryNext = false;	// don't evaluate next block (if any) in the sequence

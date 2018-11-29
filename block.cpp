@@ -17,13 +17,8 @@ void Block::iterate() {
 
 	//for (int i = 0; i < blockSections.size(); i++)
 		//cout << "BLOCK" << blockSections[i].first << "::" << blockSections[i].second << endl;	//delete
-	//for (int i = 0; i < storyVars.size(); i++)
 	
 	bool tryNext;
-	//vector<pair<string, string>> linkList;		// list of links to display after the passage text <displayText, passageName>
-	//vector<pair<section_t, string>> tokens;
-
-	blockSections = blockSections;
 
 	for (int i = 0; i < blockSections.size(); i++)
 	{
@@ -34,10 +29,9 @@ void Block::iterate() {
 			Link L(blockSections[i].second);
 			displayText += L.getDisplayText();									// put displayText from LINK in displayText
 			blockLinks.emplace_back(L.getDisplayText(), L.getPassageName());	// add to list of links for block
-			cout << "BLOCKLINK::" << L.getDisplayText() << endl;
 		}
-		//cout << "  Link:  " << endl << s.second << endl;
 		break;
+
 		case GOTO:
 		{
 			GoTo go(blockSections[i].second);
@@ -45,6 +39,7 @@ void Block::iterate() {
 			blockLinks.emplace_back(go.getName(), go.getName());
 		}
 		break;
+
 		case SET:
 		{
 			Set var(blockSections[i].second);
@@ -136,20 +131,4 @@ void Block::iterate() {
 			cout << "ERROR_IN_BLOCK :: " << blockSections[i].second << endl;
 		}
 	}
-
-	/*
-	// display passage and list of links for user to choose from
-	cout << displayText << endl;
-	for (int i = 0; i < linkList.size(); i++)
-		cout << i + 1 << ". " << linkList[i].first << endl;
-
-	// if there's still links left to choose from, advance the passage; otherwise, end the program.
-	if (linkList.size() >= 1)
-	{
-		cin >> nextPassage;
-		return linkList[--nextPassage].second;
-	}
-	else
-		return END_STORY;
-		*/
 }

@@ -110,7 +110,6 @@ private:
 	Story s;
 public:
 	Interp(const string& text);
-	Interp(const string& text, bool isBlock);
 	string iterate(const string& passName);
 };
 
