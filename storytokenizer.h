@@ -150,7 +150,6 @@ private:
 public:
 	If(const string& t);
 	const string& getVar() { return var; }
-	bool compareVariables(const bool& value);
 	bool getExpectedValue() { return expectedValue; }
 };
 
@@ -162,7 +161,7 @@ private:
 public:
 	ElseIf(const string& t);
 	const string& getVar() { return var; }
-	bool getExpectedValue() { return expectedValue; }	//EDIT
+	bool getExpectedValue() { return expectedValue; }
 };
 
 class Block
