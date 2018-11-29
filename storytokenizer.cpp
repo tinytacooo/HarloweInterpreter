@@ -108,10 +108,10 @@ string Interp::iterate(const string& passName)
 		case GOTO:
 		{
 			GoTo go(tokens[i].second);
-			//this->iterate(go.getName());		// KJ - EDIT
-			//i = tokens.size();					// KJ - EDIT
-			passageText += go.getName();							// basically handle GOTO like a LINK... don't know if that's right, though.
-			linkList.emplace_back(go.getName(), go.getName());
+			this->iterate(go.getName());		// KJ - EDIT
+			i = tokens.size();					// KJ - EDIT
+			//passageText += go.getName();							// basically handle GOTO like a LINK... don't know if that's right, though.
+			//linkList.emplace_back(go.getName(), go.getName());
 		}
 		break;
 		case IF:
@@ -123,7 +123,7 @@ string Interp::iterate(const string& passName)
 
 			if (tempBool)
 			{
-				/*** BLOCK HANDLING ***/
+				/*** BLOCK HANDLING ***/		// BLOCK HANDLING is the same for IF, ELSEIF, ELSE
 				Block b(tokens[i + 1].second);
 				b.setStoryVars(s.getStoryVars());
 				b.iterate();
@@ -189,11 +189,20 @@ string Interp::iterate(const string& passName)
 				break;
 			else
 			{
+				/*** BLOCK HANDLING ***/
 				Block b(tokens[i + 1].second);
 				b.setStoryVars(s.getStoryVars());
 				b.iterate();
+
+				// update passage linkList
+				for (auto it : b.getBlockLinks())
+					linkList.emplace_back(it.first, it.second);
+				// update story variables
+				for (auto it : b.getBlockVars())
+					s.setVar(it.first, it.second);
+				// update passage text display
 				passageText += b.getBlockText();
-				//cout << b.getText() << endl;
+				/*** END BLOCK HANDLING ***/
 
 			}
 		}

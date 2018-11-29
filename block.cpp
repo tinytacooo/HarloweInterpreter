@@ -91,7 +91,7 @@ void Block::iterate() {
 			{
 				bool tempBool;
 				tryNext = false;
-				If compare(blockSections[i].second);
+				ElseIf compare(blockSections[i].second);
 
 				tempBool = (storyVars[compare.getVar()] == compare.getExpectedValue()) ? true : false;
 
@@ -116,6 +116,7 @@ void Block::iterate() {
 			else
 			{
 				Block b(blockSections[i + 1].second);
+				b.setStoryVars(storyVars);
 				b.iterate();
 				displayText += b.getBlockText();
 			}
@@ -128,7 +129,7 @@ void Block::iterate() {
 		}
 		break;
 		default:
-			cout << "ERROR_IN_BLOCK :: " << blockSections[i].second << endl;
+			cout << ""; //do nothing
 		}
 	}
 }

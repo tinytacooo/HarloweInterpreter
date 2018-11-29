@@ -113,7 +113,7 @@ public:
 	string iterate(const string& passName);
 };
 
-class GoTo
+class GoTo : public SectionToken
 {
 private:
 	string name;
@@ -131,7 +131,7 @@ public:
 	const string& getText() { return text; }
 };
 
-class Set
+class Set : public SectionToken
 {
 private:
 	string var;
@@ -142,7 +142,7 @@ public:
 	const bool& getVal() { return val; }
 };
 
-class If
+class If : public SectionToken
 {
 private:
 	string var;
@@ -150,11 +150,10 @@ private:
 public:
 	If(const string& t);
 	const string& getVar() { return var; }
-	bool compareVariables(const bool& value);
 	bool getExpectedValue() { return expectedValue; }
 };
 
-class ElseIf
+class ElseIf : public SectionToken
 {
 private:
 	string var;
@@ -162,7 +161,7 @@ private:
 public:
 	ElseIf(const string& t);
 	const string& getVar() { return var; }
-	bool getExpectedValue() { return expectedValue; }	//EDIT
+	bool getExpectedValue() { return expectedValue; }
 };
 
 class Block
