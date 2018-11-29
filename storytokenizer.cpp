@@ -108,10 +108,10 @@ string Interp::iterate(const string& passName)
 		case GOTO:
 		{
 			GoTo go(tokens[i].second);
-			//this->iterate(go.getName());		// KJ - EDIT
-			//i = tokens.size();					// KJ - EDIT
-			passageText += go.getName();							// basically handle GOTO like a LINK... don't know if that's right, though.
-			linkList.emplace_back(go.getName(), go.getName());
+			this->iterate(go.getName());		// KJ - EDIT
+			i = tokens.size();					// KJ - EDIT
+			//passageText += go.getName();							// basically handle GOTO like a LINK... don't know if that's right, though.
+			//linkList.emplace_back(go.getName(), go.getName());
 		}
 		break;
 		case IF:
