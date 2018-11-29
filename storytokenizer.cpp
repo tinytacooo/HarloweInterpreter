@@ -104,7 +104,6 @@ string Interp::iterate(const string& passName)
 		{
 			Set var(tokens[i].second);
 			s.setVar(var.getVar(), var.getVal());
-			//this->iterate("deadline");
 		}
 		break;
 		case GOTO:
@@ -126,7 +125,18 @@ string Interp::iterate(const string& passName)
 			if (tempBool)
 			{
 				Block b(tokens[i + 1].second);
-				cout << b.getText() << endl;
+				b.setStoryVars(s.getStoryVars());
+				b.iterate();
+
+				// update passage linkList
+				for (auto it : b.getBlockLinks())
+					linkList.emplace_back(it.first, it.second);
+				// update story variables
+				for (auto it : b.getBlockVars())
+					s.setVar(it.first, it.second);
+				// update passage text display
+				passageText += b.getText();
+
 				i++;
 			}
 			else
@@ -150,7 +160,10 @@ string Interp::iterate(const string& passName)
 				if (tempBool)
 				{
 					Block b(tokens[i + 1].second);
-					cout << b.getText() << endl;
+					b.setStoryVars(s.getStoryVars());
+					b.iterate();
+					passageText += b.getText();
+					//cout << b.getText() << endl;
 					tryNext = false;	// don't evaluate next block (if any) in the sequence
 					i++;
 				}
@@ -166,7 +179,10 @@ string Interp::iterate(const string& passName)
 			else
 			{
 				Block b(tokens[i + 1].second);
-				cout << b.getText() << endl;
+				b.setStoryVars(s.getStoryVars());
+				b.iterate();
+				passageText += b.getBlockText();
+				//cout << b.getText() << endl;
 
 			}
 		}
@@ -310,12 +326,7 @@ ElseIf::ElseIf(const string& t)
 		expectedValue = false;
 }
 
-Block::Block(const string& t)
-{
-	text = t.substr(1, t.length() - 2);
-}
-
-
+// DELETEd old block code; moved complex shit to block.cpp
 
 bool StoryTokenizer::hasNextPassage() const
 {

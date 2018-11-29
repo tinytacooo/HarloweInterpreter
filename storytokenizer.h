@@ -100,6 +100,7 @@ public:
 	vector<pair<section_t, string>> getTokens(const string& p);
 	void setVar(string str, bool p);
 	bool getVariableVal(const string& str);
+	unordered_map<string, bool> getStoryVars() { return variableVec; }
 };
 
 class Interp
@@ -168,11 +169,23 @@ public:
 class Block
 {
 private:
+	bool hasVar = false;
+	bool hasLink = false;
+	bool hasText = false;
 	string text;
+	string displayText;
+	unordered_map <string, bool> blockVars;
+	unordered_map <string, bool> storyVars;
 	vector <pair<section_t, string>> blockSections;
+	vector <pair<string, string>> blockLinks;
 public:
 	Block(const string& t);
+	void setStoryVars(const unordered_map<string, bool> sv) { storyVars = sv; };
+	void iterate();
 	const string& getText() { return text; }
+	string getBlockText() { return displayText; };
+	unordered_map<string, bool> getBlockVars() { return blockVars; }
+	vector <pair<string, string>> getBlockLinks() { return blockLinks; }
 };
 
 class Link
