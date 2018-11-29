@@ -50,12 +50,12 @@ void Block::iterate() {
 				if (it.first == var.getVar())
 					isPresent = true;
 			}
-			// create/edit variable in temporary master list as needed
+			// create/edit variable in temporary master list as needed - to be used as reference inside Block class
 			if (isPresent)
 				storyVars[var.getVar()] = var.getVal();
 			else
 				storyVars.emplace(var.getVar(), var.getVal());
-			// create variable in block variable list
+			// create variable in block variable list - to return to outside the Block class
 			blockVars.emplace(var.getVar(), var.getVal());
 		}
 		break;
@@ -109,7 +109,7 @@ void Block::iterate() {
 			}
 		}
 		break;
-		/*case ELSE:
+		case ELSE:
 		{
 			if (!tryNext)
 				break;
@@ -117,10 +117,10 @@ void Block::iterate() {
 			{
 				Block b(blockSections[i + 1].second);
 				b.iterate();
-
+				displayText += b.getBlockText();
 			}
 		}
-		break;*/
+		break;
 		case TEXT:
 		{
 			Text t(blockSections[i].second);

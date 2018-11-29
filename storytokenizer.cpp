@@ -85,8 +85,7 @@ string Interp::iterate(const string& passName)
 	else
 		passage = passName;
 	tokens = s.getTokens(passage);
-	cout << "Passage Name: " << passage << endl;
-
+	//cout << "Passage Name: " << passage << endl;
 
 	for (int i = 0; i < tokens.size(); i++)
 	{
